@@ -76,8 +76,9 @@ const Banner = () => {
   }
 
   return (
-    <div 
-      className="relative w-full max-w-[1230px] h-[500px] mx-auto bg-black overflow-hidden"
+  <div className="py-3">
+      <div 
+      className="relative w-full max-w-[1299px] h-[500px] mx-auto bg-black overflow-hidden"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -136,6 +137,7 @@ const Banner = () => {
         ))}
       </div>
     </div>
+  </div>
   )
 }
 
