@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-function Login() {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (token && user) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -25,40 +34,16 @@ function Login() {
 
     // For demo purposes - in a real app, you would validate with a backend
     if (email === "admin@gmail.com" && password === "12345678") {
-      try {
-        // Extract username from email (everything before @)
-        const userName = email.split("@")[0];
+      // Store user information in localStorage
+      const userName = email.split('@')[0]; // Extract name from email
+      localStorage.setItem("token", "fake_token_123");
+      localStorage.setItem("user", userName);
+      localStorage.setItem("userEmail", email);
+      
+      toast.success("Muvaffaqiyatli kirdingiz!");
 
-        // Store BOTH token AND user in localStorage - with error handling
-        window.localStorage.setItem("token", "fake_token_123");
-        window.localStorage.setItem("user", userName);
-        window.localStorage.setItem("userEmail", email);
-
-        // Verify the data was saved
-        const savedToken = window.localStorage.getItem("token");
-        const savedUser = window.localStorage.getItem("user");
-        
-        console.log("Saved to localStorage:", { 
-          token: savedToken, 
-          user: savedUser,
-          userEmail: window.localStorage.getItem("userEmail")
-        });
-
-        if (savedToken && savedUser) {
-          toast.success("Muvaffaqiyatli kirdingiz!");
-          
-          // Force a reload to ensure all components recognize the login state
-          setTimeout(() => {
-            navigate("/");
-            window.location.reload();
-          }, 500);
-        } else {
-          toast.error("Login ma'lumotlarini saqlashda xatolik yuz berdi.");
-        }
-      } catch (error) {
-        console.error("Login error:", error);
-        toast.error("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
-      }
+      // Navigate to home page immediately without page refresh
+      navigate("/");
     } else {
       toast.error("Email yoki parol noto'g'ri.");
     }
@@ -138,4 +123,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;
